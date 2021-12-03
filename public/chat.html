@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie-edge">
+    <title>Chat MrGreque</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="left">
+        <!--<div id="conteudo">
+            <input type="text" name="username" id="user" placeholder="Digite seu usuário">
+            <input type="text" name="senha" id="password" placeholder="Digite seu usuário">
+            <div id="transfer">
+                <button type="submit" id="logar" onclick="login()">Logar</button>
+                <button type="submit" id="cadastrar" onclick="showDiv()">Cadastrar</button>
+            </div>
+        </div>-->
+        <div id="top">
+            <button id="logoff">Logoff</button>
+        </div>
+    </div>
+    <form id="chat">
+        <div class="messages" id="messages"></div>
+        <input type="text" id="message" class="inputMessage" placeholder="Digite sua mensagem">
+        <button type="submit" class="buttonMessage">Enviar</button>
+    </form>
+
+    <script src="./scripts/chat.js"></script>
+</body>
+</html>
