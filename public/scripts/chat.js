@@ -1,4 +1,13 @@
 let socket = io('http://localhost:5000');
+
+io.on('connect', socket => {
+    socket.emit('start', {
+        socket: socket,
+        user: localStorage.getItem('user'),
+        rooms: []
+    })
+});
+
 const leftTop = document.getElementById('top');
 leftTop.appendChild(you());
 
