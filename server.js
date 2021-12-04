@@ -45,14 +45,27 @@ app.post('/login', (req, res) => {
 let messages = [];
 
 io.on('connection', socket =>{
-    console.log(`Socket conectado: ${socket.id}`);
+    //console.log(`Socket conectado: ${socket.id}`);
 
     socket.emit('previousMessages', messages);
+
+    socket.on('getPreviousMessages', () => {
+        socket.emit('previousMessages', messages);
+    });
 
     socket.on('sendMessage', data =>{
         messages.push(data);
         socket.broadcast.emit('receivedMessage', data);
+        socket.broadcast.emit('talks', messages);
     }); 
+
+    socket.emit('talks', messages);
+
+    socket.on('newMessage', data =>{
+        messages.push(data);
+        socket.broadcast.emit('receivedMessage', data);
+        socket.broadcast.emit('talks', messages);
+    });
 
     /*socket.emit('valLogin', users);
 
