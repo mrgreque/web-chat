@@ -2,7 +2,10 @@ const express = require('express');
 const path = require('path');
 const axios = require('axios');
 const database = require('./database/db');
-const User = require('./model/user');
+const modelUser = require('./model/user');
+const {joinUser, getUser, leaveUser} = require('./util/user');
+const {messageModel, getPreviousTalks, getIndexRoom} = require('./util/message');
+
 
 const app = express();
 const server = require('http').createServer(app);
@@ -16,6 +19,73 @@ app.set('view engine','html');
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+let rooms = [];
+
+io.on('connection', socket =>{
+    //console.log(`Socket conectado: ${socket.id}`);
+    function addRoom(room) {
+        let possui = false;
+        let createdRoom = 0;
+
+        for (let k = 0; k < rooms.length; k++){
+            if (rooms[k].name == room.name){
+                possui = true;
+                createdRoom = k;
+            };
+        };
+
+        console.log(rooms);
+        try {
+            console.log(rooms[0].messages);
+        } catch {
+            null;
+        }
+
+        if (possui == false) {
+            rooms.push(room);
+            socket.emit('attTalks', rooms);
+        } else {
+            rooms[createdRoom].messages.push(room.messages[0]);
+        }
+    }
+
+    socket.on('sendUserSession', (user) => {
+        socket.emit('talks', getPreviousTalks(user, rooms));
+    });
+
+    socket.on('addRoom', ({name, user, destinatary, message}) => {
+        addRoom({
+            name: name,
+            messages: [messageModel(message.author, message.message)],
+            users: [user, destinatary]
+        });
+    });
+
+    socket.on('talkInit', ({user, room}) => {
+        const userInit = joinUser(socket.id, user, room);
+
+        socket.join(userInit.room);
+
+        socket.emit('sysMessage', messageModel('sys', `Hello world ${userInit.user}.`));
+
+        socket.broadcast.to(userInit.room).emit('sysMessage', messageModel('sys', `Usuário ${userInit.user} concectado.`));
+
+        socket.emit('previousMessages', rooms[getIndexRoom(rooms, userInit.room)].messages);
+
+        socket.on('sendMessage', (message) => {
+            const username = getUser(message.author);
+            rooms[getIndexRoom(rooms, userInit.room)].messages.push(messageModel(message.author, message.message));
+            io.to(userInit.room).emit('renderMessage', messageModel(message.author, message.message));
+        });
+
+        socket.on('disconnection', () => {
+            io.to(userInit.room).emit('sysMessage', messageModel('sys', `Usuário ${userInit.user} desconectado.`));
+        });
+
+    });
+
+});
+
 app.get('/',(req, res) =>{
     res.render('index.html');
 });
@@ -26,14 +96,14 @@ app.get('/chat', (req, res) => {
 
 app.post('/cadastro', async (req, res) => {
     const name = req.body.name;
-    const user = req.body.user;
+    const cadUser = req.body.user;
     const passwd = req.body.passwd;
 
     try {
         const sync = database.sync();
 
-        const create = await User.create({
-            user: user,
+        const create = await modelUser.create({
+            user: cadUser,
             passwd: passwd,
             name: name,
             ativo: 1
@@ -58,7 +128,7 @@ app.post('/login', async (req, res) => {
     const usr = req.body.user;
     const pwd = req.body.password;
     const sync = await database.sync();
-    const dados = await User.findByPk(usr);
+    const dados = await modelUser.findByPk(usr);
 
     if (dados !== null){
         if (dados.dataValues.user == usr && dados.dataValues.passwd == pwd){
@@ -78,66 +148,6 @@ app.post('/login', async (req, res) => {
             statusText: 'Usuário/senha incorretos'
         });
     };
-
-    /*if (usr == 'root' && pwd == '1234') {
-        res.status(200).send({
-            logged: true
-        })
-    } else {
-        if (usr == 'sa' && pwd == '1234'){
-            res.status(200).send({
-                logged: true
-            });
-        } else {
-            res.status(200).send({
-                logged: false
-            });
-        };
-    };*/
-});
-
-let messages = [];
-let rooms = [];
-io.on('connection', socket =>{
-    //console.log(`Socket conectado: ${socket.id}`);
-    socket.name = '';
-    socket.on('start', () => {
-        let sendRooms = [];
-        for (let room of rooms) {
-            let sockets = io.in(room);
-            if (socket in sockets){
-                sendRooms.push(room);
-            };
-        }
-    });
-
-    /*socket.emit('previousMessages', messages);
-
-    socket.on('getPreviousMessages', () => {
-        socket.emit('previousMessages', messages);
-    });
-
-    socket.on('sendMessage', data =>{
-        messages.push(data);
-        socket.broadcast.emit('receivedMessage', data);
-        socket.broadcast.emit('talks', messages);
-    }); 
-
-    socket.emit('talks', messages);
-
-    socket.on('newMessage', data =>{
-        messages.push(data);
-        socket.broadcast.emit('receivedMessage', data);
-        socket.broadcast.emit('talks', messages);
-    });*/
-
-    /*socket.emit('valLogin', users);
-
-    socket.on('cadastro', data =>{
-        users.push(data);
-        socket.broadcast.emit('confirmaCadastro', data);
-    });*/
-
 });
 
 server.listen(5000);
