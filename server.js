@@ -31,6 +31,7 @@ io.on('connection', socket =>{
             if (r.name == room.name || r.name == `${room.users[1]}x${room.users[0]}`) {
                 possui = true;
                 createdRoom = getIndexRoom(rooms, room.name);
+                console.log('true');
             }
         })
 
@@ -38,7 +39,6 @@ io.on('connection', socket =>{
             rooms.push(room);
             io.emit('attTalks', rooms);
         } else {
-            ////////AQUIIIIIIIIIIIIIIIII
             rooms[createdRoom].messages.push(room.messages[0]);
             socket.emit('previousMessages', rooms[createdRoom].messages)
         }
