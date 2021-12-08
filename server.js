@@ -27,25 +27,20 @@ io.on('connection', socket =>{
         let possui = false;
         let createdRoom = 0;
 
-        for (let k = 0; k < rooms.length; k++){
-            if (rooms[k].name == room.name){
+        rooms.forEach( r => {
+            if (r.name == room.name || r.name == `${room.users[1]}x${room.users[0]}`) {
                 possui = true;
-                createdRoom = k;
-            };
-        };
-
-        console.log(rooms);
-        try {
-            console.log(rooms[0].messages);
-        } catch {
-            null;
-        }
+                createdRoom = getIndexRoom(rooms, room.name);
+            }
+        })
 
         if (possui == false) {
             rooms.push(room);
-            socket.emit('attTalks', rooms);
+            io.emit('attTalks', rooms);
         } else {
+            ////////AQUIIIIIIIIIIIIIIIII
             rooms[createdRoom].messages.push(room.messages[0]);
+            socket.emit('previousMessages', rooms[createdRoom].messages)
         }
     }
 
@@ -65,23 +60,19 @@ io.on('connection', socket =>{
         const userInit = joinUser(socket.id, user, room);
 
         socket.join(userInit.room);
+    });
 
-        socket.emit('sysMessage', messageModel('sys', `Hello world ${userInit.user}.`));
-
-        socket.broadcast.to(userInit.room).emit('sysMessage', messageModel('sys', `Usuário ${userInit.user} concectado.`));
+    let userInit = null;
+    socket.on('dados', ({user, room}) => {
+        userInit = joinUser(socket.id, user, room);
 
         socket.emit('previousMessages', rooms[getIndexRoom(rooms, userInit.room)].messages);
+    });
 
-        socket.on('sendMessage', (message) => {
-            const username = getUser(message.author);
-            rooms[getIndexRoom(rooms, userInit.room)].messages.push(messageModel(message.author, message.message));
-            io.to(userInit.room).emit('renderMessage', messageModel(message.author, message.message));
-        });
-
-        socket.on('disconnection', () => {
-            io.to(userInit.room).emit('sysMessage', messageModel('sys', `Usuário ${userInit.user} desconectado.`));
-        });
-
+    socket.on('sendMessage', (message) => {
+        const username = getUser(message.author);
+        rooms[getIndexRoom(rooms, userInit.room)].messages.push(messageModel(message.author, message.message));
+        io.to(userInit.room).emit('renderMessage', messageModel(message.author, message.message));
     });
 
 });

@@ -1,7 +1,11 @@
 let socket = io.connect();
 
+if (sessionStorage.getItem('user') == null){
+    window.location = '/';
+}
+
 //io.connect().on('connection', socket => {
-    socket.emit('sendUserSession', localStorage.getItem('user'));
+    socket.emit('sendUserSession', sessionStorage.getItem('user') );
 
     socket.on('talks', talks => {
         talks.forEach(talk => {
@@ -14,7 +18,6 @@ let socket = io.connect();
     });
 
     socket.on('previousMessages', messages => {
-        console.log('previous messages: ', messages);
         messages.forEach(message => {
             renderMessage(message);
         });
@@ -25,20 +28,20 @@ let socket = io.connect();
     });
 
     socket.on('attTalks', rooms => {
-        console.log('Aqui,', rooms);
         let userTalks = [];
         
         rooms.forEach(room => {
             room.users.forEach(user => {
-                user == localStorage.getItem('user') ? userTalks.push(room) : null; 
+                user == sessionStorage.getItem('user') ? userTalks.push(room) : null; 
             });
         });
 
         let userTalksNow = document.querySelectorAll('.talk');
-        
-        if (userTalksNow.length !== userTalks.length) {
-            socket.emit('sendUserSession', localStorage.getItem('user'));
-        };
+        userTalksNow.forEach((u) => {
+            u.parentNode.removeChild(u);
+        });
+
+        socket.emit('sendUserSession', sessionStorage.getItem('user'));
         
     });
 //});
@@ -48,12 +51,12 @@ leftTop.appendChild(you());
 
 function you() {
     let you = document.createElement('p');
-    you.innerHTML = `Você está logado(a) como <strong>${localStorage.getItem('user')}</strong>`;
+    you.innerHTML = `Você está logado(a) como <strong>${sessionStorage.getItem('user')}</strong>`;
     return you;
 }
 
 document.getElementById('logoff').addEventListener('click', _ => {
-    window.localStorage.clear();
+    window.sessionStorage.clear();
     window.location = '/';
 });
 
@@ -62,7 +65,7 @@ iconAdd.addEventListener('click', () => {
     const contact = prompt('Qual o contato?');
     const firstMessage = prompt('Primeira mensagem:');
 
-    const author = localStorage.getItem('user');
+    const author = sessionStorage.getItem('user');
 
     const newMessage = {
         name: `${author}x${contact}`,
@@ -93,7 +96,7 @@ function addTalk(talk) {
     let p = document.createElement('p');
     p.setAttribute('class', 'talk-user');
     talk.users.forEach(user => {
-        if (user != localStorage.getItem('user')){
+        if (user != sessionStorage.getItem('user')){
             p.innerHTML = user;
             destinatary = user;
         };
@@ -106,16 +109,27 @@ function addTalk(talk) {
     div.setAttribute('class', 'talk');
     div.setAttribute('id', talk.room);
     div.addEventListener('click', () => {
+        console.log(JSON.parse(sessionStorage.getItem('talks')));
+        let localTalks = JSON.parse(sessionStorage.getItem('talks'));
+        if (localTalks.talks.includes(talk.room) == false) {
+
+            localTalks.talks.push(talk.room);
+            console.log(JSON.stringify(localTalks));
+            sessionStorage.setItem('talks', JSON.stringify(localTalks));
+    
+            socket.emit('talkInit', {
+                user: sessionStorage.getItem('user'),
+                room: talk.room
+            });
+        };
         document.querySelectorAll('.message').forEach((message) => {
             message.parentNode.removeChild(message);
         });
         document.getElementById('chat').style.display = 'flex';
-        //ESTA DUPLICANDO, BLOQUEAR CLIQUE
-        socket.emit('talkInit', {
-            user: localStorage.getItem('user'),
+        socket.emit('dados', {
+            user: sessionStorage.getItem('user'),
             room: talk.room
         });
-        div.disabled = true;
     });
 
     div.appendChild(img);
@@ -131,10 +145,40 @@ chat.addEventListener('submit',function(event){
     let message = document.getElementById('message');
 
     socket.emit('sendMessage', {
-        author: localStorage.getItem('user'),
+        author: sessionStorage.getItem('user'),
         message: message.value
     });
 
     message.value = '';
     //message.focus();
 });
+
+function click(room) {
+    document.querySelectorAll('.message').forEach((message) => {
+        message.parentNode.removeChild(message);
+    });
+    document.getElementById('chat').style.display = 'flex';
+    //ESTA DUPLICANDO, BLOQUEAR CLIQUE
+    socket.emit('talkInit', {
+        user: sessionStorage.getItem('user'),
+        room: room
+    });
+    block(room)
+}
+
+function block(id){
+    const talks = document.querySelectorAll('.talk');
+
+    talks.forEach( talk => {
+        if (talk.getAttribute('id') == id) {
+            talk.removeAttribute('click', click(id));
+        } else {
+            try {
+                talk.removeAttribute('click', click(id));
+            } catch (error) {
+                null;
+            }
+            talk.addEventListener('click', click(id));
+        }
+    })
+}

@@ -10,8 +10,9 @@ form.addEventListener('submit', async function (e) {
         })
         .then((res) => {
             if (res.data.logged == true) {
-                window.localStorage.setItem('user', user);
-                window.localStorage.setItem('loggedAt', new Date().toLocaleString());
+                sessionStorage.setItem('user', user);
+                sessionStorage.setItem('talks', JSON.stringify({talks: []}));
+                sessionStorage.setItem('loggedAt', new Date().toLocaleString());
                 window.location = '/chat';
             } else {
                 check.innerHTML = 'Usuário ou senha inválidos.'
