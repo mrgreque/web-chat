@@ -89,9 +89,9 @@ app.post('/cadastro', async (req, res) => {
     const cadUser = req.body.user;
     const passwd = req.body.passwd;
 
-    try {
-        const sync = database.sync();
-
+    await database.sync();
+    const userValidation = await modelUser.findByPk(cadUser);
+    if (userValidation == null) {
         const create = await modelUser.create({
             user: cadUser,
             passwd: passwd,
@@ -104,14 +104,13 @@ app.post('/cadastro', async (req, res) => {
             success: true,
             data: create
         });
-    } catch (err) {
-        console.log(err);
+    } else {
         res.status(200).send({
             method: 'Create',
             success: false,
             data: null
         });
-    }
+    };
 });
 
 app.post('/login', async (req, res) => {
@@ -119,7 +118,7 @@ app.post('/login', async (req, res) => {
     const pwd = req.body.password;
     const sync = await database.sync();
     const dados = await modelUser.findByPk(usr);
-
+    
     if (dados !== null){
         if (dados.dataValues.user == usr && dados.dataValues.passwd == pwd){
             res.status(200).send({

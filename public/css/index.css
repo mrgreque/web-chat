@@ -25,7 +25,7 @@ body{
 
 #forms {
     min-height: 80vh;
-    min-width: 30%;
+    width: max(30%, 30%);
     background-color: #ffffff;
     display: flex;
     align-items: center;
@@ -33,7 +33,7 @@ body{
     justify-content: center;
 }
 
-#login {
+#login, #cadastro {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -41,25 +41,25 @@ body{
     width: 70%;
 }
 
-#usr, #pwd {
+.inputs {
+    height: 25px;
     color: #333356;
     border: none;
     border-bottom: 1px solid #333356;
     font-size: 1.05em;
     margin: 10px 0 20px 0;
     width: 100%;
-    padding: 5px;
+    padding: 5px 0px 5px 4px;
     transition: all .3s;
 }
 
-#usr:hover {
-    border: none;
-    border-bottom: 3px solid #333356;
+.inputs:hover {
+    /*border-bottom: 3px solid #333356;*/
     background-color:#50557f17;
-    padding: 10px;
+    /*padding: 7px 0 7px 4px;*/
 }
 
-#log {
+#log, #cad {
     margin: 40px 0 0 0;
     color: #ffffff;
     background-color: #333356;
@@ -67,6 +67,23 @@ body{
     border: none;
     width: 100%;
     padding: 20px;
+    transition: all .3s;
+}
+
+#log:hover, #cad:hover {
+    cursor: pointer;
+    background-color: #50557f;
+}
+
+#sigin, #signup {
+    margin-top: 20px;
+    color: #333356;
+    transition: all .5s;
+}
+
+#sigin:hover, #signup:hover {
+    cursor: pointer;
+    color: #50557f;
 }
 
 .identifier {
@@ -76,4 +93,55 @@ body{
 
 #form-cadastro {
     display: none;
+}
+
+#check, #err-cad {
+    text-align: center;
+    height: 15px;
+    color: #c52323;
+}
+
+#cadastrado {
+    width: max(300px, 40%);
+    height: 25vh;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#success {
+    max-width: 90%;
+    font-size: 1.2em;
+    color: #333356;
+}
+
+#to-login {
+    color: #ffffff;
+    background-color: #333356;
+    border: none;
+    padding: 10px;
+    margin-top: 20px;
+    font-size: 1em;
+}
+
+#to-login:hover {
+    cursor: pointer;
+    background-color: #50557f;
+}
+
+/*MEDIAS*/
+
+@media (max-width: 1365px) {
+    #forms {
+        width: max(400px)
+    }
+}
+
+@media (max-width: 450px) {
+    #forms {
+        width: 90%;
+    }
 }

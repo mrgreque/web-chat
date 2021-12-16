@@ -5,28 +5,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/index.css">
-    <title>Document</title>
+    <title>ChatZ3r4</title>
 </head>
 <body>
-    <section id="forms">
+    <main id="forms">
         <div id="login">
             <form id="form-login">
                 <p class="identifier">Usuario</p>
-                <input type="text" name="user" id="usr" placeholder="Digite aqui seu usuário">
+                <input type="text" id="usr" class="inputs" placeholder="Digite aqui seu usuário">
                 <p class="identifier">Senha</p>
-                <input type="password" name="password" id="pwd" placeholder="Digite aqui sua senha">
+                <input type="password" id="pwd" class="inputs" placeholder="Digite aqui sua senha">
+                <p id="check"></p>
                 <input type="submit" value="Logar" id="log">
             </form>
-            <p id="check"></p>
-            <p id="cadastro">Cadastrar-se</p>
+            <p id="signup">Cadastrar-se</p>
         </div>
-        <form id="form-cadastro">
-            <input type="text" name="cad-name" id="cad-name" placeholder="Digite aqui o nome do usuário">
-            <input type="text" name="cad-user" id="cad-usr" placeholder="Digite aqui seu usuário">
-            <input type="password" name="cad-password" id="cad-pwd" placeholder="Digite aqui sua senha">
-            <input type="submit" value="Cadastrar" id="cad">
-        </form>
-    </section>
+        <div id="cadastro">
+            <form id="form-cadastro">
+                <p class="identifier">Nome</p>
+                <input type="text" id="cad-name" class="inputs" placeholder="Digite aqui seu nome">
+                <p class="identifier">Usuario</p>
+                <input type="text" id="cad-usr" class="inputs" placeholder="Digite aqui seu usuário">
+                <p class="identifier">Senha</p>
+                <input type="password" id="cad-pwd" class="inputs" placeholder="Digite aqui sua senha">
+                <p id="err-cad"></p>
+                <input type="submit" value="Cadastrar" id="cad">
+            </form>
+            <p id="sigin">Logar</p>
+        </div>
+    </main>
 </body>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="./scripts/login.js"></script>
