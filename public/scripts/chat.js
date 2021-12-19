@@ -51,7 +51,7 @@ const leftTop = document.getElementById('top');
 leftTop.appendChild(you());
 function you() {
     let you = document.createElement('p');
-    you.innerHTML = `Você está logado(a) como <strong>${sessionStorage.getItem('user')}</strong>`;
+    you.innerHTML = `<strong>${sessionStorage.getItem('user')}</strong>`;
     return you;
 }
 
@@ -135,7 +135,10 @@ function addTalk(talk) {
         document.querySelectorAll('.message').forEach((message) => {
             message.parentNode.removeChild(message);
         });
-        document.getElementById('chat').style.display = 'flex';
+        document.querySelector('.inputMessage').style.display = 'block';
+        document.querySelector('.buttonMessage').style.display = 'block';
+        document.querySelector('.messages').style.display = 'block';
+        //document.getElementById('chat').style.display = 'flex';
         socket.emit('dados', {
             user: sessionStorage.getItem('user'),
             room: talk.room

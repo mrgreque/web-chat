@@ -12,33 +12,19 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="left">
-        <!--<div id="conteudo">
-            <input type="text" name="username" id="user" placeholder="Digite seu usuário">
-            <input type="text" name="senha" id="password" placeholder="Digite seu usuário">
-            <div id="transfer">
-                <button type="submit" id="logar" onclick="login()">Logar</button>
-                <button type="submit" id="cadastrar" onclick="showDiv()">Cadastrar</button>
+    <main id="main">
+        <div id="left">
+            <div id="top">
+                <button id="logoff">Logoff</button>
+                <img id="icon-add" src="https://cdn-icons.flaticon.com/png/512/3416/premium/3416075.png?token=exp=1638577800~hmac=3e4984f3b4f3d87c4e2ac3758a04fadd">
             </div>
-        </div>-->
-        <div id="top">
-            <button id="logoff">Logoff</button>
-            <img id="icon-add" src="https://cdn-icons.flaticon.com/png/512/3416/premium/3416075.png?token=exp=1638577800~hmac=3e4984f3b4f3d87c4e2ac3758a04fadd">
         </div>
-        <!--<div class="talk" id="one">
-            <div class="talk-img"></div>
-            <p class="talk-user" id="talk-one">Nome.Usuario1</p>
-        </div>
-        <div class="talk" id="two">
-            <div class="talk-img"></div>
-            <p class="talk-user">Nome.Usuario2</p>
-        </div>-->
-    </div>
-    <form id="chat">
-        <div class="messages" id="messages"></div>
-        <input type="text" id="message" class="inputMessage" placeholder="Digite sua mensagem">
-        <button type="submit" class="buttonMessage">Enviar</button>
-    </form>
+        <form id="chat">
+            <div class="messages" id="messages"></div>
+            <input type="text" id="message" class="inputMessage" placeholder="Digite sua mensagem">
+            <button type="submit" class="buttonMessage">Enviar</button>
+        </form>
+    </main>
     <script src="./scripts/chat.js"></script>
 </body>
 </html>

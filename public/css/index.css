@@ -144,4 +144,20 @@ body{
     #forms {
         width: 90%;
     }
+
+    .identifier {
+        font-size: 1.2em;
+    }
+
+    #login, #cadastro {
+        width: 80%;
+    }
+
+    .inputs {
+        font-size: 1.2em;
+    }
+
+    #log, #cad {
+        font-size: 1.2em;
+    }
 }
