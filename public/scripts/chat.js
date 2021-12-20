@@ -5,6 +5,10 @@ if (sessionStorage.getItem('user') == null){
     window.location = '/';
 }
 
+socket.on('reset', () => {
+    sessionStorage.setItem('talks', JSON.stringify({"talks": []}));
+});
+
 //Ao entrar no chat o user da sessão é enviado para o back-end
 socket.emit('sendUserSession', sessionStorage.getItem('user') );
 
@@ -95,10 +99,26 @@ iconAdd.addEventListener('click', () => {
 
 function renderMessage(message){
     let div = document.createElement('div');
-    div.setAttribute('class', 'message');
-    div.innerHTML = `${message.sendedAt} <strong>${message.author}: </strong>${message.message}`;
+    div.setAttribute('class', 'div-message');
+    if (message.author == sessionStorage.getItem('user')) {
+        div.style.cssText = 'background-color: #51aabf';
+    } else {
+        div.style.cssText = 'background-color: #333356; left:51%;';
+    }
 
-    document.querySelector('#messages').appendChild(div);
+    let dateAndHour = document.createElement('span');
+    dateAndHour.setAttribute('class', 'date-and-hour');
+    dateAndHour.innerHTML = `${message.sendedAt}`;
+    
+    let span = document.createElement('span');
+    span.setAttribute('class', 'message');
+    span.innerHTML = `<strong>${message.author}: </strong>${message.message}`;
+
+    div.appendChild(dateAndHour);
+    div.appendChild(span);
+    let campMessages = document.querySelector('#messages');
+    campMessages.appendChild(div);
+    campMessages.scrollTop = campMessages.scrollHeight;
     document.getElementById('message').value = '';
 }
 
@@ -132,12 +152,13 @@ function addTalk(talk) {
                 room: talk.room
             });
         };
-        document.querySelectorAll('.message').forEach((message) => {
+        document.querySelectorAll('.div-message').forEach((message) => {
             message.parentNode.removeChild(message);
         });
         document.querySelector('.inputMessage').style.display = 'block';
         document.querySelector('.buttonMessage').style.display = 'block';
-        document.querySelector('.messages').style.display = 'block';
+        document.querySelector('.messages').style.display = 'flex';
+        document.getElementById('inputMessage').style.display = 'flex';
         //document.getElementById('chat').style.display = 'flex';
         socket.emit('dados', {
             user: sessionStorage.getItem('user'),
@@ -157,7 +178,7 @@ chat.addEventListener('submit',function(event){
     event.preventDefault();
     
     let message = document.getElementById('message');
-
+    console.log(message.value);
     socket.emit('sendMessage', {
         author: sessionStorage.getItem('user'),
         message: message.value

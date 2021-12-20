@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie-edge">
+    <link rel="shortcut icon" href="./images/chat-ico.ico">
     <title>Chat MrGreque</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
@@ -15,14 +16,18 @@
     <main id="main">
         <div id="left">
             <div id="top">
-                <button id="logoff">Logoff</button>
-                <img id="icon-add" src="https://cdn-icons.flaticon.com/png/512/3416/premium/3416075.png?token=exp=1638577800~hmac=3e4984f3b4f3d87c4e2ac3758a04fadd">
+                <div id="logoff"><span>Logoff</span></div>
+                <img id="icon-add" src="./images/add.ico">
             </div>
         </div>
-        <form id="chat">
+        <form id="chat" autocomplete="off">
             <div class="messages" id="messages"></div>
-            <input type="text" id="message" class="inputMessage" placeholder="Digite sua mensagem">
-            <button type="submit" class="buttonMessage">Enviar</button>
+            <div id="inputMessage">
+                <input type="text" id="message" class="inputMessage" placeholder="Digite sua mensagem">
+                <button type="submit" class="buttonMessage">
+                    <img src="./images/send.ico">
+                </button>
+            </div>
         </form>
     </main>
     <script src="./scripts/chat.js"></script>

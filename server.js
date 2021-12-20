@@ -22,6 +22,8 @@ app.use(express.urlencoded({extended: true}));
 let rooms = [];
 
 io.on('connection', socket =>{
+    socket.emit('reset', {reset: true});
+
     function addRoom(room) {
         let possui = false;
         let createdRoom = 0;

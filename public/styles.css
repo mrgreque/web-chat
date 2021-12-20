@@ -3,6 +3,7 @@
   padding: 0;
   box-sizing: border-box;
   outline: none;
+  font-family: sans-serif;
 }
 
 .page-colors {
@@ -34,43 +35,104 @@ body{
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 2vw;
+  padding: 20px;
+}
+
+#inputMessage {
+  display: none;
+  padding: 5px;
+  background-color: rgba(255, 255, 255, 0.5);
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.603);
 }
 
 .inputMessage {
   display: none;
-  width: 100%;
-  border: 1px solid #ddd;
+  width: 94%;
   height: 40px;
   padding: 5px 10px;
+  margin-right: 5px;
   font-size: 1em;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.603);
+  border: none;
+  background-color: transparent;
+  color: #50557f;
+}
+
+.inputMessage::placeholder {
+  color: #50557f;
 }
 
 .buttonMessage {
   display: none;
-  width: 50%;
-  height: 40px;
-  padding: 10px;
-  font-size: 1.2em;
-  background: #51aabf;
+  background-color: transparent;
   text-align: center;
   font-weight: bold;
   color: #FFF;
-  margin-top: 20px;
   border: none;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.603);
   cursor: pointer;
+  transition: all .5s;
+  align-items: center;
+}
+
+.buttonMessage img {
+  height: 40px;
+  object-fit: contain;
+  transition: transform .5s;
+}
+
+.buttonMessage:hover img{
+  transform: scale(1.2);
 }
 
 .messages {
-  background-color: #fff;
   display: none;
+  flex-direction: column;
+  background-color: #fff;
   width: 100%;
   height: 90%;
-  margin: 20px 0;
   padding: 20px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.603);
+  margin-bottom: 20px;
+  overflow-y: scroll;
+}
+
+.messages::-webkit-scrollbar {
+  width: 7px;
+  transition: all .5s;
+}
+
+.messages::-webkit-scrollbar:hover {
+  width: 10px;
+  background-color: rgba(13, 27, 99, 0.212);
+}
+
+.messages::-webkit-scrollbar-thumb {
+  background-color: #8796c2;
+  padding: 2px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.603);
+}
+
+.div-message {
+  position: relative;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.date-and-hour {
+  font-size: 0.7em;
+}
+
+.message {
+  margin-top: 7px;
+  font-size: 1.1em;
 }
 
 #left{
@@ -79,6 +141,7 @@ body{
   overflow-y: scroll;
   background-color: #333356;
   color: #FFF;
+  transition: width .5s;
 }
 
 #left::-webkit-scrollbar {
@@ -99,26 +162,57 @@ body{
 }
 
 #logoff {
+  position: relative;
   height: 40px;
-  padding: 10px;
+  width: 60px;
   font-size: 0.9em;
-  background-color: #51aabf;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  transition: all .4s;
+  cursor: pointer;
 }
 
-#logoff:hover {
-  cursor: pointer;
-  background-color: #333356;
+#logoff span{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #51aabf;
+  box-shadow: 0px 0px 15px #50557f;
+  z-index: 1;
+  overflow: hidden;
+}
+
+#logoff span::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to left, rgba(113, 203, 255, 0.356), transparent);
+  transform: skewX(20deg) translateX(0);
+  transition: 0.8s;
+  z-index: -1;
+}
+
+#logoff:hover span::before {
+  transform: translateX(200%);
 }
 
 #icon-add {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   margin: 0 5px 0 0;
   cursor: pointer;
+  transition: all .5s;
+}
+
+#icon-add:hover {
+  box-shadow: 0 0 20px rgba(113, 203, 255, 0.514);
+  border-radius: 20px;
 }
 
 .talk {
@@ -134,7 +228,8 @@ body{
 }
 
 .talk:hover {
-  background-color: #50557f;;
+  background-color: #50557f;
+  cursor: pointer;
 }
 
 .talk-img {
