@@ -55,7 +55,7 @@ const leftTop = document.getElementById('top');
 leftTop.appendChild(you());
 function you() {
     let you = document.createElement('p');
-    you.innerHTML = `<strong>${sessionStorage.getItem('user')}</strong>`;
+    you.innerHTML = `<strong>${sessionStorage.getItem('name')}</strong>`;
     return you;
 }
 

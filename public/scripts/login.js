@@ -105,20 +105,36 @@ function createCadastrado(user) {
     document.body.appendChild(section);
 }
 
-const checks = {
-    email: false,
-    user: false,
-    name: false,
-    password: false
+//CHECKS
+function checkBase () {
+    return {
+        status: false,
+        pressed: false
+    }
 }
 
+const checks = {
+    email: checkBase(),
+    user: checkBase(),
+    name: checkBase(),
+    password: checkBase()
+}
 const user = document.getElementById('cad-usr');
 const userCheck = document.getElementById('cad-user-check');
-user.addEventListener('keyup', (e) => {
+const email = document.getElementById('cad-email');
+const emailCheck = document.getElementById('cad-email-check');
+const passwd = document.getElementById('cad-pwd');
+const name = document.getElementById('cad-name');
+
+// terminar os checks para os demais campos
+// enquanto digitar, qndo estver onkeyup, colocar cor azul para reverter redzable
+// finalizar check
+
+//USER CHECK
+user.addEventListener('keyup', () => {
+    checks.user.pressed = true;
     const value = user.value;
-    console.log(value);
     const len = value.split('');
-    console.log(len);
 
     if (len.length < 6) {
         userCheck.innerHTML = 'Tamanho mínimo de 6 caracteres';
@@ -131,30 +147,48 @@ user.addEventListener('keyup', (e) => {
     };
 });
 
+//EMAIL CHECK
+email.addEventListener('keyup', () => {
+    checks.email.pressed = true;
+    const value = email.value;
+    const regex = /\S+@\S+\.\S+/;
+    
+    if (!regex.test(value)) {
+        emailCheck.innerHTML = 'Insira em um formato válido';
+        emailCheck.style.margin = '0 0 10px 0';
+        email.style.margin = '5px 0 5px 0';
+    } else { 
+        resetValue(emailCheck, 'inner');
+        emailCheck.style.margin = '0';
+        email.style.margin = '5px 0 10px 0';
+    };
+})
+
+
+
 function redzable (element) {
     element.style.cssText = "color: #c52323; border-bottom: 1px solid #c52323;";
 };
 
-const passwd = document.getElementById('cad-pwd').value;
-const name = document.getElementById('cad-name').value;
+
 
 const cadastro = document.getElementById('form-cadastro');
 cadastro.addEventListener('submit', async function (e) {
     e.preventDefault();
-    const user = document.getElementById('cad-usr').value;
-    const passwd = document.getElementById('cad-pwd').value;
-    const name = document.getElementById('cad-name').value;
+    // const user = document.getElementById('cad-usr').value;
+    //const passwd = document.getElementById('cad-pwd').value;
+    //const name = document.getElementById('cad-name').value;
 
-    if (name && user && passwd ) {
+    if (name.value && user.value && passwd.value) {
         await axios.post('/cadastro', {
-            user: user,
-            passwd: passwd,
-            name: name,
+            user: user.value,
+            passwd: passwd.value,
+            name: name.value,
             ativo: 1
         })
         .then((res) => {
             if (res.data.success == true) {
-                createCadastrado(user);
+                createCadastrado(user.value);
             } else {
                 console.log(`Error code 400: ${res.data.message}`);
                 errCadastro.innerHTML = 'Usuário já existente';
@@ -164,9 +198,12 @@ cadastro.addEventListener('submit', async function (e) {
             alert(err);
         });   
     } else {
+        if (!checks.user.pressed || !checks.email.pressed || !checks.name.pressed || !checks.password.pressed) {
+            //função para executar validação
+        }
         errCadastro.innerHTML = 'Inserir todos os campos';
-        user && checks.user ? null : redzable(document.getElementById('cad-usr'));
-        passwd && checks.password  ? null : redzable(document.getElementById('cad-pwd'));
-        name && checks.name ? null : redzable(document.getElementById('cad-name'));
+        user.value && checks.user.status ? null : redzable(document.getElementById('cad-usr'));
+        passwd.value && checks.password.status  ? null : redzable(document.getElementById('cad-pwd'));
+        name.value && checks.name.status ? null : redzable(document.getElementById('cad-name'));
     }
 });
