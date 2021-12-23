@@ -32,7 +32,6 @@ io.on('connection', socket =>{
             if (r.name == room.name || r.name == `${room.users[1]}x${room.users[0]}`) {
                 possui = true;
                 createdRoom = getIndexRoom(rooms, room.name);
-                console.log('true');
             }
         })
 
@@ -91,9 +90,9 @@ app.post('/cadastro', async (req, res) => {
     const cadUser = req.body.user;
     const passwd = req.body.passwd;
 
-    const result = await modelUser.createUser({user: cadUser, password: passwd, name: name});
+    const signUp = await modelUser.createUser({user: cadUser, password: passwd, name: name});
 
-    if (result.error == null) {
+    if (signUp.data != null) {
         res.status(200).json({
             method: 'createUser',
             success: true,
@@ -103,57 +102,27 @@ app.post('/cadastro', async (req, res) => {
         res.status(200).json({
             method: 'createUser',
             success: false,
-            message: result.error.message
+            message: signUp.error.message
         });
-    }
-    /*await database.sync();
-    const userValidation = await modelUser.findByPk(cadUser);
-    if (userValidation == null) {
-        const create = await modelUser.create({
-            user: cadUser,
-            passwd: passwd,
-            name: name,
-            ativo: 1
-        });
-
-        res.status(200).send({
-            method: 'Create',
-            success: true,
-            data: create
-        });
-    } else {
-        res.status(200).send({
-            method: 'Create',
-            success: false,
-            data: null
-        });
-    };*/
+    };
 });
 
 app.post('/login', async (req, res) => {
     const usr = req.body.user;
     const pwd = req.body.password;
-    /*const sync = await database.sync();
-    const dados = await modelUser.findByPk(usr);
-    
-    if (dados !== null){
-        if (dados.dataValues.user == usr && dados.dataValues.passwd == pwd){
-            res.status(200).send({
-                logged: true,
-                statusText: 'Ok.'
-            });
-        } else {
-            res.status(200).send({
-                logged: false,
-                statusText: 'Usuário/senha incorretos.'
-            });
-        }
-    } else {
-        res.status(200).send({
-            logged: false,
-            statusText: 'Usuário/senha incorretos'
+    const signIn = await modelUser.userAuth({user: usr, password: pwd});
+
+    if ( signIn.data.length !== 0 ) {
+        res.status(200).json({
+            logged: true,
+            message: 'Ok.'
         });
-    };*/
+    } else {
+        res.status(200).json({
+            logged: false,
+            message: 'Usuário ou senha inválidos'
+        });
+    }
 });
 
 server.listen( process.env.PORT || 5000);

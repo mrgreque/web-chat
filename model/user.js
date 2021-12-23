@@ -1,43 +1,17 @@
-/*const Sequelize = require('sequelize');
-const database = require('../database/db');
-
-const User = database.define('user', {
-    user: {
-        type: Sequelize.STRING,
-        unique: true,
-        primaryKey: true,
-        allowNull: false
-    },
-    passwd: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    name: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    ativo: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    }
-});
-
-module.exports = User;*/
-
-const supabase = require('../database/online_db');
+const supabase = require('../database/db');
 
 async function userAuth( {user, password} ) {
-    let { result, error } = await supabase
+    let { data, error } = await supabase
         .from('usersv1')
         .select('*')
         .eq('username', user)
         .eq('password', password)
 
-    result ? console.log(result) : console.log(error);
+    return {data, error};
 };
 
 async function createUser ( {user, password, name} ) {
-    let { result, error } = await supabase
+    let { data, error } = await supabase
         .from('usersv1')
         .insert([
             {
@@ -48,7 +22,7 @@ async function createUser ( {user, password, name} ) {
             }
         ]);
 
-    return {result, error};
+    return {data, error};
 }
 
 module.exports = {

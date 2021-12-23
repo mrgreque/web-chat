@@ -9,6 +9,8 @@
 - [x] Lógica do Login
 - [x] Validar se usuário já existe
 - [x] Finalizar o front-end
+- [x] Upload heroku
+- [x] Migrar para Supabase (Postgres DB)
 - [ ] Encrypt password SQLite e verificador tempo real no front da senha (2x senha)
 - [ ] Exibir última mensagem abaixo do nome
 - [ ] Alerta ao receber nova mensagem

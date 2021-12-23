@@ -9,6 +9,18 @@ function setDisplays(elements, display) {
     };
 };
 
+function resetValue (element, innerOrValue) {
+    innerOrValue == 'inner' ? element.innerHTML = '' : element.value = '';
+}
+
+function resetValues (elements, innerOrValue) {
+    innerOrValue == 'inner' ? elements.forEach(element => {
+        element.innerHTML = '';
+    }) : elements.forEach( element => {
+        element.value = '';
+    });
+}
+
 const redirectToCadastro = document.getElementById('signup');
 const redirectToLogin = document.getElementById('sigin');
 const divLogin = document.getElementById('login');
@@ -21,12 +33,15 @@ redirectToCadastro.addEventListener('click', () => {
     setDisplays([divLogin, redirectToCadastro], 'none');
     setDisplays([cadastro, redirectToLogin], 'block');
     setDisplay(divCadastro, 'flex');
+    resetValue(document.getElementById('check'), 'inner');
 });
 
 redirectToLogin.addEventListener('click', () => {
     setDisplays([divCadastro, cadastro, redirectToLogin], 'none');
     setDisplay(redirectToCadastro, 'block');
     setDisplay(divLogin, 'flex');
+    resetValues(document.querySelectorAll('.inputs'), 'value');
+    resetValue(document.getElementById('err-cad'), 'inner');
 });
 
 //FORMS BD INTEGRATED
@@ -37,7 +52,7 @@ form.addEventListener('submit', async function (e) {
     const password = document.getElementById('pwd').value;
     const check = document.getElementById('check');
 
-    if (user != '' && password != ''){
+    if (user && password ){
         await axios.post('/login', {
             user: user,
             password: password
@@ -49,7 +64,7 @@ form.addEventListener('submit', async function (e) {
                 sessionStorage.setItem('loggedAt', new Date().toLocaleString());
                 window.location = '/chat';
             } else {
-                check.innerHTML = 'Usuário ou senha inválidos.';
+                check.innerHTML = res.data.message;
             }
         })
         .catch((err) => {
@@ -91,7 +106,7 @@ cadastro.addEventListener('submit', async function (e) {
     const passwd = document.getElementById('cad-pwd').value;
     const name = document.getElementById('cad-name').value;
 
-    if (name != '' && user != '' && passwd != '') {
+    if (name && user && passwd ) {
         await axios.post('/cadastro', {
             user: user,
             passwd: passwd,
