@@ -91,7 +91,22 @@ app.post('/cadastro', async (req, res) => {
     const cadUser = req.body.user;
     const passwd = req.body.passwd;
 
-    await database.sync();
+    const result = await modelUser.createUser({user: cadUser, password: passwd, name: name});
+
+    if (result.error == null) {
+        res.status(200).json({
+            method: 'createUser',
+            success: true,
+            message: 'Success'
+        });
+    } else {
+        res.status(200).json({
+            method: 'createUser',
+            success: false,
+            message: result.error.message
+        });
+    }
+    /*await database.sync();
     const userValidation = await modelUser.findByPk(cadUser);
     if (userValidation == null) {
         const create = await modelUser.create({
@@ -112,13 +127,13 @@ app.post('/cadastro', async (req, res) => {
             success: false,
             data: null
         });
-    };
+    };*/
 });
 
 app.post('/login', async (req, res) => {
     const usr = req.body.user;
     const pwd = req.body.password;
-    const sync = await database.sync();
+    /*const sync = await database.sync();
     const dados = await modelUser.findByPk(usr);
     
     if (dados !== null){
@@ -138,7 +153,7 @@ app.post('/login', async (req, res) => {
             logged: false,
             statusText: 'Usuário/senha incorretos'
         });
-    };
+    };*/
 });
 
 server.listen( process.env.PORT || 5000);

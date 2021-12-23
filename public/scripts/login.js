@@ -102,6 +102,7 @@ cadastro.addEventListener('submit', async function (e) {
             if (res.data.success == true) {
                 createCadastrado(user);
             } else {
+                console.log(`Error code 400: ${res.data.message}`);
                 errCadastro.innerHTML = 'Usuário já existente';
             }
         })
