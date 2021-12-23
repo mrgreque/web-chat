@@ -1,4 +1,4 @@
-//FRONT
+//UTIL FUNCTIONS
 function setDisplay(element, display) {
     element.style.display = display;
 };
@@ -21,6 +21,7 @@ function resetValues (elements, innerOrValue) {
     });
 }
 
+//CAMPOS
 const redirectToCadastro = document.getElementById('signup');
 const redirectToLogin = document.getElementById('sigin');
 const divLogin = document.getElementById('login');
@@ -28,12 +29,14 @@ const divCadastro = document.getElementById('cadastro');
 const errCadastro = document.getElementById('err-cad');
 const forms = document.getElementById('forms');
 
+//EVENTS TO LOGIN / TO REGISTER
 setDisplay(divCadastro, 'none');
 redirectToCadastro.addEventListener('click', () => {
     setDisplays([divLogin, redirectToCadastro], 'none');
     setDisplays([cadastro, redirectToLogin], 'block');
     setDisplay(divCadastro, 'flex');
     resetValue(document.getElementById('check'), 'inner');
+    forms.style.height = '90vh';
 });
 
 redirectToLogin.addEventListener('click', () => {
@@ -42,9 +45,10 @@ redirectToLogin.addEventListener('click', () => {
     setDisplay(divLogin, 'flex');
     resetValues(document.querySelectorAll('.inputs'), 'value');
     resetValue(document.getElementById('err-cad'), 'inner');
+    forms.style.height = '80vh';
 });
 
-//FORMS BD INTEGRATED
+//SUBMIT LOGIN
 const form = document.getElementById('form-login');
 form.addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -60,6 +64,7 @@ form.addEventListener('submit', async function (e) {
         .then((res) => {
             if (res.data.logged == true) {
                 sessionStorage.setItem('user', user);
+                sessionStorage.setItem('name', res.data.name);
                 sessionStorage.setItem('talks', JSON.stringify({talks: []}));
                 sessionStorage.setItem('loggedAt', new Date().toLocaleString());
                 window.location = '/chat';
@@ -75,6 +80,7 @@ form.addEventListener('submit', async function (e) {
     }
 });
 
+//SUBMIT REGISTER
 function createCadastrado(user) {
     setDisplay(divCadastro, 'none');
     setDisplay(forms, 'none');
@@ -98,6 +104,39 @@ function createCadastrado(user) {
     section.appendChild(button);
     document.body.appendChild(section);
 }
+
+const checks = {
+    email: false,
+    user: false,
+    name: false,
+    password: false
+}
+
+const user = document.getElementById('cad-usr');
+const userCheck = document.getElementById('cad-user-check');
+user.addEventListener('keyup', (e) => {
+    const value = user.value;
+    console.log(value);
+    const len = value.split('');
+    console.log(len);
+
+    if (len.length < 6) {
+        userCheck.innerHTML = 'Tamanho mínimo de 6 caracteres';
+        userCheck.style.margin = '0 0 10px 0';
+        user.style.margin = '5px 0 5px 0';
+    } else { 
+        resetValue(userCheck, 'inner');
+        userCheck.style.margin = '0';
+        user.style.margin = '5px 0 10px 0';
+    };
+});
+
+function redzable (element) {
+    element.style.cssText = "color: #c52323; border-bottom: 1px solid #c52323;";
+};
+
+const passwd = document.getElementById('cad-pwd').value;
+const name = document.getElementById('cad-name').value;
 
 const cadastro = document.getElementById('form-cadastro');
 cadastro.addEventListener('submit', async function (e) {
@@ -126,5 +165,8 @@ cadastro.addEventListener('submit', async function (e) {
         });   
     } else {
         errCadastro.innerHTML = 'Inserir todos os campos';
+        user && checks.user ? null : redzable(document.getElementById('cad-usr'));
+        passwd && checks.password  ? null : redzable(document.getElementById('cad-pwd'));
+        name && checks.name ? null : redzable(document.getElementById('cad-name'));
     }
 });

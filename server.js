@@ -5,6 +5,7 @@ const database = require('./database/db');
 const modelUser = require('./model/user');
 const {joinUser, getUser, leaveUser} = require('./util/user');
 const {messageModel, getPreviousTalks, getIndexRoom} = require('./util/message');
+const { encrypt, decrypt } = require('./util/bcrypt');
 
 
 const app = express();
@@ -88,8 +89,7 @@ app.get('/chat', (req, res) => {
 app.post('/cadastro', async (req, res) => {
     const name = req.body.name;
     const cadUser = req.body.user;
-    const passwd = req.body.passwd;
-
+    const passwd = await encrypt(req.body.passwd);
     const signUp = await modelUser.createUser({user: cadUser, password: passwd, name: name});
 
     if (signUp.data != null) {
@@ -110,17 +110,20 @@ app.post('/cadastro', async (req, res) => {
 app.post('/login', async (req, res) => {
     const usr = req.body.user;
     const pwd = req.body.password;
-    const signIn = await modelUser.userAuth({user: usr, password: pwd});
+    const signIn = await modelUser.userAuth({user: usr});
+    const compare = await decrypt(pwd, signIn.data[0].password);
 
-    if ( signIn.data.length !== 0 ) {
+    if ( signIn.data.length !== 0 && compare ) {
         res.status(200).json({
             logged: true,
-            message: 'Ok.'
+            message: 'Ok.',
+            name: signIn.data[0].name
         });
     } else {
         res.status(200).json({
             logged: false,
-            message: 'Usuário ou senha inválidos'
+            message: 'Usuário ou senha inválidos',
+            name: null
         });
     }
 });

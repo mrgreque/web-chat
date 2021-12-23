@@ -43,11 +43,12 @@ body{
 
 .inputs {
     height: 25px;
+    width: max(60%, 60%);
     color: #333356;
     border: none;
     border-bottom: 1px solid #333356;
     font-size: 1.05em;
-    margin: 10px 0 20px 0;
+    margin: 5px 0 12px 0;
     width: 100%;
     padding: 5px 0px 5px 4px;
     transition: all .3s;
@@ -59,8 +60,19 @@ body{
     /*padding: 7px 0 7px 4px;*/
 }
 
-#log, #cad {
+#log{
     margin: 40px 0 0 0;
+    color: #ffffff;
+    background-color: #333356;
+    font-size: 1em;
+    border: none;
+    width: 100%;
+    padding: 20px;
+    transition: all .3s;
+}
+
+#cad{
+    margin: 30px 0 0 0;
     color: #ffffff;
     background-color: #333356;
     font-size: 1em;
@@ -93,6 +105,7 @@ body{
 
 #form-cadastro {
     display: none;
+    width: 100%;
 }
 
 #check, #err-cad {
@@ -130,6 +143,12 @@ body{
 #to-login:hover {
     cursor: pointer;
     background-color: #50557f;
+}
+
+.text-check {
+    font-size: 0.8em;
+    color: #c52323;
+    transition: all .5s;
 }
 
 /*MEDIAS*/

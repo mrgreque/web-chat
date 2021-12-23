@@ -3,9 +3,8 @@ const supabase = require('../database/db');
 async function userAuth( {user, password} ) {
     let { data, error } = await supabase
         .from('usersv1')
-        .select('*')
+        .select('name, password')
         .eq('username', user)
-        .eq('password', password)
 
     return {data, error};
 };
