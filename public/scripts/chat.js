@@ -103,7 +103,11 @@ function renderMessage(message){
     if (message.author == sessionStorage.getItem('user')) {
         div.style.cssText = 'background-color: #51aabf';
     } else {
-        div.style.cssText = 'background-color: #333356; left:51%;';
+        if (window.innerWidth > 800) {
+            div.style.cssText = 'background-color: #333356; left:51%;';
+        } else {
+            div.style.cssText = 'background-color: #333356; left:6%;';
+        }
     }
 
     let dateAndHour = document.createElement('span');
@@ -178,7 +182,6 @@ chat.addEventListener('submit',function(event){
     event.preventDefault();
     
     let message = document.getElementById('message');
-    console.log(message.value);
     socket.emit('sendMessage', {
         author: sessionStorage.getItem('user'),
         message: message.value

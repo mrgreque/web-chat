@@ -267,6 +267,10 @@ body{
     justify-content: space-around;
   }
 
+  .div-message {
+    width: 95%;
+  }
+
   .talk {
     width: 100%;
     height: 100px;
@@ -283,5 +287,11 @@ body{
 
   #chat {
     width: 90%;
+    padding: 10px;
+  }
+
+  .messages {
+    padding: 5px;
+    overflow-x: hidden;
   }
 }
