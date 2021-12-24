@@ -124,66 +124,159 @@ const userCheck = document.getElementById('cad-user-check');
 const email = document.getElementById('cad-email');
 const emailCheck = document.getElementById('cad-email-check');
 const passwd = document.getElementById('cad-pwd');
-const name = document.getElementById('cad-name');
+const passwdCheck = document.getElementById('cad-pwd-check');
+const inputName = document.getElementById('cad-name');
+const nameCheck = document.getElementById('cad-name-check');
+const cadastro = document.getElementById('form-cadastro');
+const btnCadastro = document.getElementById('cad');
 
 // terminar os checks para os demais campos
 // enquanto digitar, qndo estver onkeyup, colocar cor azul para reverter redzable
 // finalizar check
 
 //USER CHECK
-user.addEventListener('keyup', () => {
-    checks.user.pressed = true;
-    const value = user.value;
+function fctCheckUser (us) {
+    const value = us;
     const len = value.split('');
 
     if (len.length < 6) {
         userCheck.innerHTML = 'Tamanho mínimo de 6 caracteres';
         userCheck.style.margin = '0 0 10px 0';
         user.style.margin = '5px 0 5px 0';
+        checks.user.status = false;
     } else { 
         resetValue(userCheck, 'inner');
         userCheck.style.margin = '0';
-        user.style.margin = '5px 0 10px 0';
+        user.style.cssText = 'margin:5px 0 10px 0;color: #333356;border-bottom: 1px solid #333356;';
+        checks.user.status = true;
     };
+};
+user.addEventListener('keyup', () => {
+    checks.user.pressed = true;
+    fctCheckUser(user.value);
 });
 
 //EMAIL CHECK
-email.addEventListener('keyup', () => {
-    checks.email.pressed = true;
-    const value = email.value;
+function fctCheckEmail(em) {
+    const value = em;
     const regex = /\S+@\S+\.\S+/;
     
     if (!regex.test(value)) {
         emailCheck.innerHTML = 'Insira em um formato válido';
         emailCheck.style.margin = '0 0 10px 0';
-        email.style.margin = '5px 0 5px 0';
+        email.style.margin = '5px 0 2px 0';
+        checks.email.status = false;
     } else { 
         resetValue(emailCheck, 'inner');
         emailCheck.style.margin = '0';
-        email.style.margin = '5px 0 10px 0';
+        email.style.cssText = 'margin:5px 0 10px 0;color: #333356;border-bottom: 1px solid #333356;';
+        checks.email.status = true;
     };
-})
+};
+email.addEventListener('keyup', () => {
+    checks.email.pressed = true;
+    fctCheckEmail(email.value);
+});
+
+//PASSWORD CHECK
+function fctCheckPassword(pass) {
+    const value = pass;
+    const len = value.split('');
+
+    let letrasMaiusculas = /[A-Z]/;
+    let letrasMinusculas = /[a-z]/; 
+    let numeros = /[0-9]/;
+    let caracteresEspeciais = /[!|@|#|$|%|^|&|*|(|)|-|_]/;
+
+    let tamanho = 'Insira no mínimo 8 caracteres';
+    let caracter = 'Insira no mínimo 1 caracter especial';
+    let maiuscula = 'Insira no mínimo 1 letra maiúscula';
+    let minuscula = 'Insira no mínimo 1 letra minúscula';
+    let numero = 'Insira no mínimo 1 número';
+    let msgs = [];
+    
+    len.length < 8 ? msgs.includes(tamanho) ? null : msgs.push(tamanho) : null;
+    !letrasMaiusculas.test(value) ? msgs.includes(maiuscula) ? null : msgs.push(maiuscula) : null;
+    !letrasMinusculas.test(value) ? msgs.includes(minuscula) ? null : msgs.push(minuscula) : null;
+    !caracteresEspeciais.test(value) ? msgs.includes(caracter) ? null : msgs.push(caracter) : null;
+    !caracteresEspeciais.test(value) ? msgs.includes(caracter) ? null : msgs.push(caracter) : null;
+    !numeros.test(value) ? msgs.includes(numero) ? null : msgs.push(numero) : null;
 
 
+    if (msgs.length > 0) {
+        passwdCheck.innerHTML = '';
+        countMargin = 30;
+        msgs.forEach(msg => {
+            passwdCheck.innerHTML += `${msg}<br>`;
+            countMargin -= 6;
+        })
+        passwdCheck.style.margin = '0 0 10px 0';
+        passwd.style.margin = '5px 0 2px 0';
+        btnCadastro.style.margin = `${countMargin}px 0 0 0`;
+        checks.password.status = false;
+    } else { 
+        resetValue(passwdCheck, 'inner');
+        passwdCheck.style.margin = '0';
+        passwd.style.cssText = 'margin:5px 0 10px 0;color: #333356;border-bottom: 1px solid #333356;';
+        btnCadastro.style.margin = '30px 0 0 0';
+        checks.password.status = true;
+    };
+};
+passwd.addEventListener('keyup', () => {
+    checks.password.pressed = true;
+    fctCheckPassword(passwd.value);
+});
+
+//NAME CHECK
+function fctCheckName (nm) {
+    const value = nm;
+    const regex = /\S+ \S+/;
+    
+    if (!regex.test(value)) {
+        nameCheck.innerHTML = 'Insira nome e sobrenome';
+        nameCheck.style.margin = '0 0 10px 0';
+        inputName.style.margin = '5px 0 2px 0';
+        checks.name.status = false;
+    } else { 
+        resetValue(nameCheck, 'inner');
+        nameCheck.style.margin = '0';
+        inputName.style.cssText = 'margin:5px 0 10px 0;color: #333356;border-bottom: 1px solid #333356;';
+        checks.name.status = true;
+    };
+};
+inputName.addEventListener('keyup', () => {
+    checks.name.pressed = true;
+    fctCheckName(inputName.value);
+});
+
+function checkAll() {
+    if (!checks.user.pressed || !checks.email.pressed || !checks.name.pressed || !checks.password.pressed) {
+        fctCheckEmail(email.value);
+        fctCheckName(inputName.value);
+        fctCheckUser(user.value);
+        fctCheckPassword(passwd.value);
+    };
+};
 
 function redzable (element) {
     element.style.cssText = "color: #c52323; border-bottom: 1px solid #c52323;";
 };
 
+function inputReadzable() {
+    email.value && checks.email.status ? null : redzable(document.getElementById('cad-email'));
+    user.value && checks.user.status ? null : redzable(document.getElementById('cad-usr'));
+    passwd.value && checks.password.status  ? null : redzable(document.getElementById('cad-pwd'));
+    inputName.value && checks.name.status ? null : redzable(document.getElementById('cad-name'));
+}
 
-
-const cadastro = document.getElementById('form-cadastro');
 cadastro.addEventListener('submit', async function (e) {
     e.preventDefault();
-    // const user = document.getElementById('cad-usr').value;
-    //const passwd = document.getElementById('cad-pwd').value;
-    //const name = document.getElementById('cad-name').value;
 
-    if (name.value && user.value && passwd.value) {
+    if (inputName.value && user.value && passwd.value) {
         await axios.post('/cadastro', {
             user: user.value,
             passwd: passwd.value,
-            name: name.value,
+            name: inputName.value,
             ativo: 1
         })
         .then((res) => {
@@ -191,19 +284,17 @@ cadastro.addEventListener('submit', async function (e) {
                 createCadastrado(user.value);
             } else {
                 console.log(`Error code 400: ${res.data.message}`);
-                errCadastro.innerHTML = 'Usuário já existente';
+                alert('Usuário já existente');
+                checkAll();
+                inputReadzable();
+                userCheck.innerHTML = 'Usuário já existente';
             }
         })
         .catch((err) => {
             alert(err);
         });   
     } else {
-        if (!checks.user.pressed || !checks.email.pressed || !checks.name.pressed || !checks.password.pressed) {
-            //função para executar validação
-        }
-        errCadastro.innerHTML = 'Inserir todos os campos';
-        user.value && checks.user.status ? null : redzable(document.getElementById('cad-usr'));
-        passwd.value && checks.password.status  ? null : redzable(document.getElementById('cad-pwd'));
-        name.value && checks.name.status ? null : redzable(document.getElementById('cad-name'));
+        checkAll();
+        inputReadzable();
     }
 });
