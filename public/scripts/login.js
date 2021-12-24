@@ -44,7 +44,7 @@ redirectToLogin.addEventListener('click', () => {
     setDisplay(redirectToCadastro, 'block');
     setDisplay(divLogin, 'flex');
     resetValues(document.querySelectorAll('.inputs'), 'value');
-    resetValue(document.getElementById('err-cad'), 'inner');
+    resetValues(document.querySelectorAll('.text-checks'), 'inner');
     forms.style.height = '80vh';
 });
 
@@ -272,8 +272,10 @@ function inputReadzable() {
 cadastro.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    if (inputName.value && user.value && passwd.value) {
+    if (inputName.value && user.value && passwd.value && email.value && 
+        checks.email.status && checks.user.status && checks.password.status && checks.name.status) {
         await axios.post('/cadastro', {
+            email: email.value,
             user: user.value,
             passwd: passwd.value,
             name: inputName.value,
@@ -281,6 +283,8 @@ cadastro.addEventListener('submit', async function (e) {
         })
         .then((res) => {
             if (res.data.success == true) {
+                resetValues(document.querySelectorAll('.inputs'), 'value');
+                resetValues(document.querySelectorAll('.text-checks'), 'inner');
                 createCadastrado(user.value);
             } else {
                 console.log(`Error code 400: ${res.data.message}`);

@@ -19,3 +19,4 @@
 - [ ] Adicionar funcionalidade de Centro de Administração
 - [ ] Adicionar funcionalidade de Excluir Conversa
 - [ ] Adicionar funcionalidade de Adicionar Foto de Perfil
+- [ ] Confirmar e-mail no cadastro e reset de senha email

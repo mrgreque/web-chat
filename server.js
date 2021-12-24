@@ -87,11 +87,12 @@ app.get('/chat', (req, res) => {
 });
 
 app.post('/cadastro', async (req, res) => {
+    const email = req.body.email;
     const name = req.body.name;
     const cadUser = req.body.user;
     const passwd = await encrypt(req.body.passwd);
-    const signUp = await modelUser.createUser({user: cadUser, password: passwd, name: name});
-
+    const signUp = await modelUser.createUser({email: email, user: cadUser, password: passwd, name: name});
+    
     if (signUp.data != null) {
         res.status(200).json({
             method: 'createUser',
